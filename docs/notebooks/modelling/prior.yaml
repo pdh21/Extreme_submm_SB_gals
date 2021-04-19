@@ -1,0 +1,8 @@
+source:
+  - 26
+field:
+  - 'Lockman-SWIRE'
+path_to_SPIRE:
+    - '/Volumes/pdh_storage/dmu_products/dmu19/dmu19_HELP-SPIRE-maps/data/'
+redshift_file:
+    - "/Volumes/pdh_storage/dmu_products/dmu24/dmu24_Lockman-SWIRE/data/master_catalogue_Lockman-SWIRE_20170710_photoz_20170802_r_and_irac1_optimised_UPDATED_IDs_20180219.fits"

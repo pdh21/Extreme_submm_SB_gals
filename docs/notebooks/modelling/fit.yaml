@@ -1,0 +1,6 @@
+source:
+  - 26
+emulator_path:
+  - '/research/astro/fir/HELP/XID_plus/docs/notebooks/examples/SED_emulator/CIGALE_emulator_20210330_log10sfr_uniformAGN_z.pkl'
+field:
+  - 'Lockman-SWIRE'
