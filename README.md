@@ -1,37 +1,9 @@
-## Welcome to GitHub Pages
+# HELPing solve the confusiion around Extreme Starbursts
 
-You can use the [editor on GitHub](https://github.com/pdh21/Extreme_submm_SB_gals/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+###Abstract
+The Herschel Space Observatory provided an unprecedented view of the FIR sky, and has enabled the detection of some of the highest redshift starforming galaxies to date. However, due to it's relatively poor resolution compared to optical data, the SPIRE maps suffer from source confusion. This means it is a non trivial problem to assign SPIRE flux to the appropriate galaxy. This paper builds on the probabilistic framework of XID+, presented in [Hurley et al 2017](https://arxiv.org/abs/1606.05770) by using additional prior information from SED templates and photometric redshifts, to robustly assign the infrared flux from SPIRE maps. We present details on the additional SED prior model component. We use XID+SED to show that the brightest Herschel objects are not single objects with massive starformation rates, but can be explained as blends of galaxies with uncontroversial physical properties. 
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+### The model
 
-### Markdown
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/pdh21/Extreme_submm_SB_gals/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+### [Detailed object fits](./docs/notebooks/modelling/fits.md)
