@@ -5,6 +5,7 @@ Fits
 
 The fits for the different fields can be found at the following locations:
 # Lockman-SWIRE
+
 | RA        | Dec      | i         | S 24 (μJy) | S 250 (mJy) | S 350 (mJy) | S 500 (mJy) | Z phot | Type      | Chi  | n bands | Z subm | Z comb | M * log(M sol.) | SFR log(M sol. yr−1) | field         |
 | --------- | -------- | --------- | ---------- | ----------- | ----------- | ----------- | ------ | --------- | ---- | ------- | ------ | ------ | --------------- | -------------------- | ------------- |
 | 159.03456 | 58.44533 | 21.37     | 1127.8     | 131.6       | 84.2        | 42.2        | 1.44   | Scd       | 4.8  | 4       | 1.16   | 1.19   | 11.62           | 3.89                 | Lockman-SWIRE |
