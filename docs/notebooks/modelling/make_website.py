@@ -8,8 +8,8 @@ mdFile.new_paragraph("The fits for the different fields can be found at the foll
 field=['Lockman-SWIRE','ELAIS-S1','XMM-LSS']
 for i in field:
     srcs=glob.glob('./output/{}/*.ipynb'.format(i))
-    for s in range(1,len(srcs)+1):
-        os.system('jupyter nbconvert ./output/{}/fit_{}.ipynb --to markdown'.format(i,s))
+    #for s in range(1,len(srcs)+1):
+        #os.system('jupyter nbconvert ./output/{}/fit_{}.ipynb --to markdown'.format(i,s))
     mdFile.new_header(level=1, title=i)
     mdFile.write('  \n')
     markdown=MDTable('../../../data/MRR2018_tables/{}_web.csv'.format(i))
