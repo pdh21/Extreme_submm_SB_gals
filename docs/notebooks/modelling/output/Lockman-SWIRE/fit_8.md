@@ -51,17 +51,17 @@ except:
 ```python
 #ysb=Table.read('../../../data/MRRfiles/fromPaper.txt', format='ascii')
 esb=Table.read('../../../data/MRR2018_tables/{}_sources.csv'.format(field[0]),format='ascii',encoding='utf-8')
-esb_web=Table.read('../../../data/MRR2018_tables/{}_web.csv'.format(field[0]),format='ascii',encoding='utf-8')
+
 ```
 
 
 ```python
-priors,_=xidplus.load('XID+CIGALE_ESB_'+esb['field'][source[0]]+'_'+str(source[0])+'.pkl')
+priors,_=xidplus.load('./output/{}/prior_'.format(field[0])+esb['field'][source[0]]+'_'+str(source[0])+'.pkl')
 ```
 
 
 ```python
-prior_list=Table.read('prior_list_'+esb['field'][source[0]]+'_'+str(source[0])+'.ascii',format='ascii')
+prior_list=Table.read('./output/{}/prior_list_'.format(field[0])+esb['field'][source[0]]+'_'+str(source[0])+'.ascii',format='ascii')
 
 ```
 
@@ -131,8 +131,8 @@ prior_predictive=Predictive(SED_prior.spire_model_CIGALE,posterior_samples = {},
 prior_pred=prior_predictive(random.PRNGKey(0),priors_prior_pred,phys_prior,hier_params)
 ```
 
-    CPU times: user 6.51 s, sys: 39.7 ms, total: 6.55 s
-    Wall time: 6.51 s
+    CPU times: user 7.39 s, sys: 107 ms, total: 7.5 s
+    Wall time: 7.47 s
 
 
 ## Fit Real data
@@ -149,7 +149,7 @@ import os
 numpyro.set_host_device_count(os.cpu_count())
 from operator import attrgetter
 nuts_kernel = NUTS(SED_prior.spire_model_CIGALE,init_strategy=numpyro.infer.init_to_feasible())
-mcmc = MCMC(nuts_kernel, num_samples=500, num_warmup=500,num_chains=4,chain_method='parallel')
+mcmc = MCMC(nuts_kernel, num_samples=50, num_warmup=500,num_chains=4,chain_method='parallel')
 rng_key = random.PRNGKey(0)
 mcmc.run(rng_key,priors,phys_prior,hier_params)
 ```
@@ -159,8 +159,8 @@ mcmc.run(rng_key,priors,phys_prior,hier_params)
 
     ValueError                                Traceback (most recent call last)
 
-    <ipython-input-14-6b05d9a177a0> in <module>
-          9 mcmc = MCMC(nuts_kernel, num_samples=500, num_warmup=500,num_chains=4,chain_method='parallel')
+    <ipython-input-14-91f9627fd040> in <module>
+          9 mcmc = MCMC(nuts_kernel, num_samples=50, num_warmup=500,num_chains=4,chain_method='parallel')
          10 rng_key = random.PRNGKey(0)
     ---> 11 mcmc.run(rng_key,priors,phys_prior,hier_params)
     
@@ -623,10 +623,11 @@ update the webtable to identify issues
 
 
 ```python
+esb_web=Table.read('../../../data/MRR2018_tables/{}_web.csv'.format(field[0]),format='ascii',encoding='utf-8')
 if np.sum(divergences)<1:
-    esb_web['status'][source[0]]='[&#9745;](./output/{}/fit_{}.md)'.format(field[0],source[0]+1)
-    esb_web.write('../../../data/MRR2018_tables/{}_web.csv'.format(field[0]),overwrite=True)
+    esb_web['status'][source[0]]='[- [ x ]](./output/{}/fit_{}.md)'.format(field[0],source[0]+1)
+    esb_web.write('../../../data/MRR2018_tables/{}_web.csv'.format(field[0]),format='ascii',overwrite=True)
 else:
-    esb_web['status'][source[0]]='[&#9744;](./output/{}/fit_{}.md)'.format(field[0],source[0]+1)
-    esb_web.write('../../../data/MRR2018_tables/{}_web.csv'.format(field[0]),overwrite=True)
+    esb_web['status'][source[0]]='[- [  ]](./output/{}/fit_{}.md)'.format(field[0],source[0]+1)
+    esb_web.write('../../../data/MRR2018_tables/{}_web.csv'.format(field[0]),format='ascii',overwrite=True)
 ```
