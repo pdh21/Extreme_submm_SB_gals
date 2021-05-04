@@ -11,6 +11,8 @@ import pylab as plt
 %matplotlib inline
 from astropy import wcs
 import seaborn as sns
+import glob
+
 
 import numpy as np
 import xidplus
@@ -50,6 +52,45 @@ except:
 esb=Table.read('../../../data/MRR2018_tables/{}_sources.csv'.format(field[0]),format='ascii',encoding='utf-8')
 
 ```
+
+
+```python
+esb['S\xa0250 (mJy)']
+```
+
+
+
+
+&lt;MaskedColumn name=&apos;S\xa0250 (mJy)&apos; dtype=&apos;float64&apos; length=27&gt;
+<table>
+<tr><td>131.6</td></tr>
+<tr><td>95.7</td></tr>
+<tr><td>--</td></tr>
+<tr><td>44.2</td></tr>
+<tr><td>56.9</td></tr>
+<tr><td>116.5</td></tr>
+<tr><td>65.7</td></tr>
+<tr><td>--</td></tr>
+<tr><td>81.9</td></tr>
+<tr><td>--</td></tr>
+<tr><td>66.4</td></tr>
+<tr><td>43.5</td></tr>
+<tr><td>...</td></tr>
+<tr><td>76.1</td></tr>
+<tr><td>56.6</td></tr>
+<tr><td>--</td></tr>
+<tr><td>25.5</td></tr>
+<tr><td>183.8</td></tr>
+<tr><td>75.0</td></tr>
+<tr><td>--</td></tr>
+<tr><td>35.3</td></tr>
+<tr><td>43.1</td></tr>
+<tr><td>43.5</td></tr>
+<tr><td>--</td></tr>
+<tr><td>--</td></tr>
+</table>
+
+
 
 
 ```python
@@ -128,8 +169,8 @@ prior_predictive=Predictive(SED_prior.spire_model_CIGALE,posterior_samples = {},
 prior_pred=prior_predictive(random.PRNGKey(0),priors_prior_pred,phys_prior,hier_params)
 ```
 
-    CPU times: user 7.94 s, sys: 63.5 ms, total: 8 s
-    Wall time: 7.96 s
+    CPU times: user 6.99 s, sys: 111 ms, total: 7.1 s
+    Wall time: 7.05 s
 
 
 ## Fit Real data
@@ -149,10 +190,10 @@ rng_key = random.PRNGKey(0)
 mcmc.run(rng_key,priors,phys_prior,hier_params)
 ```
 
-    sample: 100%|██████████| 1000/1000 [07:11<00:00,  2.32it/s, 255 steps of size 1.26e-02. acc. prob=0.88]
-    sample: 100%|██████████| 1000/1000 [07:08<00:00,  2.33it/s, 255 steps of size 1.33e-02. acc. prob=0.89]
-    sample: 100%|██████████| 1000/1000 [10:16<00:00,  1.62it/s, 255 steps of size 1.39e-02. acc. prob=0.84]
-    sample: 100%|██████████| 1000/1000 [10:12<00:00,  1.63it/s, 255 steps of size 1.62e-02. acc. prob=0.86]
+    sample: 100%|██████████| 1000/1000 [05:19<00:00,  3.13it/s, 255 steps of size 1.26e-02. acc. prob=0.88]
+    sample: 100%|██████████| 1000/1000 [05:20<00:00,  3.12it/s, 255 steps of size 1.33e-02. acc. prob=0.89]
+    sample: 100%|██████████| 1000/1000 [05:28<00:00,  3.05it/s, 255 steps of size 1.39e-02. acc. prob=0.84]
+    sample: 100%|██████████| 1000/1000 [05:54<00:00,  2.82it/s, 255 steps of size 1.62e-02. acc. prob=0.86]
 
 
 
@@ -202,7 +243,7 @@ plt.subplots_adjust(hspace=0.5,wspace=0.5)
 
 
     
-![png](fit_5_files/fit_5_19_0.png)
+![png](fit_5_files/fit_5_20_0.png)
     
 
 
@@ -236,13 +277,13 @@ g.map_upper(sns.kdeplot,alpha=0.5,color='Red',n_levels=5, shade=False,linewidth=
 
 
 
-    <seaborn.axisgrid.PairGrid at 0x2aaba25cf850>
+    <seaborn.axisgrid.PairGrid at 0x2aab6ac83f70>
 
 
 
 
     
-![png](fit_5_files/fit_5_23_1.png)
+![png](fit_5_files/fit_5_24_1.png)
     
 
 
@@ -272,7 +313,7 @@ axes[2].set_ylabel('Redshift')
 
 
     
-![png](fit_5_files/fit_5_25_1.png)
+![png](fit_5_files/fit_5_26_1.png)
     
 
 
@@ -287,8 +328,8 @@ prior_pred_samp=prior_predictive_samp(random.PRNGKey(0),priors_prior_pred,phys_p
 mod_map_array_samp=[prior_pred_samp['obs_psw'].T,prior_pred_samp['obs_pmw'].T,prior_pred_samp['obs_plw'].T]
 ```
 
-    CPU times: user 1.98 s, sys: 10.2 ms, total: 1.99 s
-    Wall time: 1.96 s
+    CPU times: user 1.8 s, sys: 6.41 ms, total: 1.8 s
+    Wall time: 1.75 s
 
 
 
@@ -314,7 +355,7 @@ figures,fig=xidplus.plot_map(priors)
 
 
     
-![png](fit_5_files/fit_5_29_0.png)
+![png](fit_5_files/fit_5_30_0.png)
     
 
 
@@ -348,7 +389,7 @@ for i in range(0, len(priors)):
 
 
     
-![png](fit_5_files/fit_5_30_0.png)
+![png](fit_5_files/fit_5_31_0.png)
     
 
 
@@ -417,15 +458,33 @@ for s in range(0,mod_map_array_samp[0].shape[-1]):
 
 
 ```python
+
+```
+
+
+```python
+
+
+```
+
+
+```python
+
+```
+
+
+```python
  # get original fluxes from scat
 band=[250,350,500]
 scat_flux=[]
 scat_pos=[]
 for b in band:
-    scat=Table.read('../../../data/WP5-{}-SCAT{}-v1.0.fits.gz'.format(field[0],b))
+    file=glob.glob('../../../data/*-{}_SCAT{}SXT_DR2.fits.gz'.format(field[0],b))
+    scat=Table.read(file[0])
     orig_scat_coords=SkyCoord(scat['RA'],scat['Dec'])
+    
     idx, d2d, d3d = c.match_to_catalog_sky(orig_scat_coords)
-    scat_flux.append(scat['F_SPIRE_{}'.format(b)][idx].data)
+    scat_flux.append(scat['Flux'][idx].data)
     scat_pos.append(orig_scat_coords[idx])
 scat_flux=np.array(scat_flux)
 ```
@@ -446,7 +505,7 @@ for i in range(0,3):
 
 
     
-![png](fit_5_files/fit_5_36_0.png)
+![png](fit_5_files/fit_5_40_0.png)
     
 
 
@@ -554,7 +613,7 @@ for i in range(0,len(priors)):
 
 
     
-![png](fit_5_files/fit_5_40_0.png)
+![png](fit_5_files/fit_5_44_0.png)
     
 
 
@@ -591,32 +650,32 @@ g.axes[-1,-1].axvline(x=esb[source[0]]['Z\xa0comb'],color='black')
 
 
 
-    [<matplotlib.lines.Line2D at 0x2aabcba8fca0>,
-     <matplotlib.lines.Line2D at 0x2aabcba95520>,
-     <matplotlib.lines.Line2D at 0x2aabcba95a00>,
-     <matplotlib.lines.Line2D at 0x2aabcba95ee0>,
-     <matplotlib.lines.Line2D at 0x2aabcbaa0400>,
-     <matplotlib.lines.Line2D at 0x2aabcbaa08e0>,
-     <matplotlib.lines.Line2D at 0x2aabcbaa0dc0>,
-     <matplotlib.lines.Line2D at 0x2aabcbaab2e0>,
-     <matplotlib.lines.Line2D at 0x2aabcbaab7c0>,
-     <matplotlib.lines.Line2D at 0x2aabcbaabca0>,
-     <matplotlib.lines.Line2D at 0x2aabcbab61c0>,
-     <matplotlib.lines.Line2D at 0x2aabcbab66a0>,
-     <matplotlib.lines.Line2D at 0x2aabcbab6b80>,
-     <matplotlib.lines.Line2D at 0x2aabcbab6f70>,
-     <matplotlib.lines.Line2D at 0x2aabcbabe580>,
-     <matplotlib.lines.Line2D at 0x2aabcbabea60>,
-     <matplotlib.lines.Line2D at 0x2aabcbabef40>,
-     <matplotlib.lines.Line2D at 0x2aabcbac9460>,
-     <matplotlib.lines.Line2D at 0x2aabcbac9940>,
-     <matplotlib.lines.Line2D at 0x2aabcbac9e20>]
+    [<matplotlib.lines.Line2D at 0x2aabcba88580>,
+     <matplotlib.lines.Line2D at 0x2aabcba88ac0>,
+     <matplotlib.lines.Line2D at 0x2aabcba88fa0>,
+     <matplotlib.lines.Line2D at 0x2aabcba8f4c0>,
+     <matplotlib.lines.Line2D at 0x2aabcba8f9a0>,
+     <matplotlib.lines.Line2D at 0x2aabcba8fe80>,
+     <matplotlib.lines.Line2D at 0x2aabcba993a0>,
+     <matplotlib.lines.Line2D at 0x2aabcba99880>,
+     <matplotlib.lines.Line2D at 0x2aabcba99d60>,
+     <matplotlib.lines.Line2D at 0x2aabcbaa4280>,
+     <matplotlib.lines.Line2D at 0x2aabcbaa4760>,
+     <matplotlib.lines.Line2D at 0x2aabcbaa4c40>,
+     <matplotlib.lines.Line2D at 0x2aabcbaaf160>,
+     <matplotlib.lines.Line2D at 0x2aabcbaaf640>,
+     <matplotlib.lines.Line2D at 0x2aabcbaafb20>,
+     <matplotlib.lines.Line2D at 0x2aabcbaaff10>,
+     <matplotlib.lines.Line2D at 0x2aabcbab9520>,
+     <matplotlib.lines.Line2D at 0x2aabcbab9a00>,
+     <matplotlib.lines.Line2D at 0x2aabcbab9ee0>,
+     <matplotlib.lines.Line2D at 0x2aabcbac4400>]
 
 
 
 
     
-![png](fit_5_files/fit_5_42_1.png)
+![png](fit_5_files/fit_5_46_1.png)
     
 
 

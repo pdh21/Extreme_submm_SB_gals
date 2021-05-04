@@ -1,4 +1,4 @@
-<span style="color:red; font-family:Helvetica Neue, Helvetica, Arial, sans-serif; font-size:2em;">An Exception was encountered at '<a href="#papermill-error-cell">In [14]</a>'.</span>
+<span style="color:red; font-family:Helvetica Neue, Helvetica, Arial, sans-serif; font-size:2em;">An Exception was encountered at '<a href="#papermill-error-cell">In [15]</a>'.</span>
 
 # Applying XID+CIGALE to Extreme Starbursts
 In this notebook, we read in the data files and prepare them for fitting with XID+CIGALE, the SED prior model extension to XID+. Here we focus on sources in [Rowan-Robinson et al. 2018](https://arxiv.org/abs/1704.07783) and claimed to have a star formation rate of $> 10^{3}\mathrm{M_{\odot}yr^{-1}}$
@@ -13,6 +13,8 @@ import pylab as plt
 %matplotlib inline
 from astropy import wcs
 import seaborn as sns
+import glob
+
 
 import numpy as np
 import xidplus
@@ -52,6 +54,45 @@ except:
 esb=Table.read('../../../data/MRR2018_tables/{}_sources.csv'.format(field[0]),format='ascii',encoding='utf-8')
 
 ```
+
+
+```python
+esb['S\xa0250 (mJy)']
+```
+
+
+
+
+&lt;MaskedColumn name=&apos;S\xa0250 (mJy)&apos; dtype=&apos;float64&apos; length=27&gt;
+<table>
+<tr><td>131.6</td></tr>
+<tr><td>95.7</td></tr>
+<tr><td>--</td></tr>
+<tr><td>44.2</td></tr>
+<tr><td>56.9</td></tr>
+<tr><td>116.5</td></tr>
+<tr><td>65.7</td></tr>
+<tr><td>--</td></tr>
+<tr><td>81.9</td></tr>
+<tr><td>--</td></tr>
+<tr><td>66.4</td></tr>
+<tr><td>43.5</td></tr>
+<tr><td>...</td></tr>
+<tr><td>76.1</td></tr>
+<tr><td>56.6</td></tr>
+<tr><td>--</td></tr>
+<tr><td>25.5</td></tr>
+<tr><td>183.8</td></tr>
+<tr><td>75.0</td></tr>
+<tr><td>--</td></tr>
+<tr><td>35.3</td></tr>
+<tr><td>43.1</td></tr>
+<tr><td>43.5</td></tr>
+<tr><td>--</td></tr>
+<tr><td>--</td></tr>
+</table>
+
+
 
 
 ```python
@@ -130,8 +171,8 @@ prior_predictive=Predictive(SED_prior.spire_model_CIGALE,posterior_samples = {},
 prior_pred=prior_predictive(random.PRNGKey(0),priors_prior_pred,phys_prior,hier_params)
 ```
 
-    CPU times: user 7.34 s, sys: 82 ms, total: 7.43 s
-    Wall time: 7.36 s
+    CPU times: user 7.21 s, sys: 92.6 ms, total: 7.3 s
+    Wall time: 7.25 s
 
 
 ## Fit Real data
@@ -158,7 +199,7 @@ mcmc.run(rng_key,priors,phys_prior,hier_params)
 
     ValueError                                Traceback (most recent call last)
 
-    <ipython-input-14-6b05d9a177a0> in <module>
+    <ipython-input-15-6b05d9a177a0> in <module>
           9 mcmc = MCMC(nuts_kernel, num_samples=500, num_warmup=500,num_chains=4,chain_method='parallel')
          10 rng_key = random.PRNGKey(0)
     ---> 11 mcmc.run(rng_key,priors,phys_prior,hier_params)
@@ -479,15 +520,33 @@ for s in range(0,mod_map_array_samp[0].shape[-1]):
 
 
 ```python
+
+```
+
+
+```python
+
+
+```
+
+
+```python
+
+```
+
+
+```python
  # get original fluxes from scat
 band=[250,350,500]
 scat_flux=[]
 scat_pos=[]
 for b in band:
-    scat=Table.read('../../../data/WP5-{}-SCAT{}-v1.0.fits.gz'.format(field[0],b))
+    file=glob.glob('../../../data/*-{}_SCAT{}SXT_DR2.fits.gz'.format(field[0],b))
+    scat=Table.read(file[0])
     orig_scat_coords=SkyCoord(scat['RA'],scat['Dec'])
+    
     idx, d2d, d3d = c.match_to_catalog_sky(orig_scat_coords)
-    scat_flux.append(scat['F_SPIRE_{}'.format(b)][idx].data)
+    scat_flux.append(scat['Flux'][idx].data)
     scat_pos.append(orig_scat_coords[idx])
 scat_flux=np.array(scat_flux)
 ```

@@ -9,7 +9,7 @@ The fits for the different fields can be found at the following locations:
 | RA        | Dec      | help_id                     | status                                             |
 | --------- | -------- | --------------------------- | -------------------------------------------------- |
 | 159.03456 | 58.44533 | HELP_J103608.299+582643.243 | [&#9745;](./output/Lockman-SWIRE/fit_1.md)         |
-| 160.50839 | 58.67179 | HELP_J104201.994+584018.387 | [&#9744;](./output/Lockman-SWIRE/fit_2.md)         |
+| 160.50839 | 58.67179 | HELP_J104201.994+584018.387 | [&#9745;](./output/Lockman-SWIRE/fit_2.md)         |
 | 160.51041 | 58.67371 | HELP_J104202.499+584025.262 | [&#9745;](./output/Lockman-SWIRE/fit_3.md)         |
 | 161.98271 | 58.07477 | HELP_J104755.889+580429.533 | [&#9745;](./output/Lockman-SWIRE/fit_4.md)         |
 | 162.33324 | 58.10657 | HELP_J104919.951+580623.673 | [&#9745;](./output/Lockman-SWIRE/fit_5.md)         |

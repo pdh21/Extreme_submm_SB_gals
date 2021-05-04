@@ -1,4 +1,4 @@
-<span style="color:red; font-family:Helvetica Neue, Helvetica, Arial, sans-serif; font-size:2em;">An Exception was encountered at '<a href="#papermill-error-cell">In [26]</a>'.</span>
+<span style="color:red; font-family:Helvetica Neue, Helvetica, Arial, sans-serif; font-size:2em;">An Exception was encountered at '<a href="#papermill-error-cell">In [27]</a>'.</span>
 
 # Applying XID+CIGALE to Extreme Starbursts
 In this notebook, we read in the data files and prepare them for fitting with XID+CIGALE, the SED prior model extension to XID+. Here we focus on sources in [Rowan-Robinson et al. 2018](https://arxiv.org/abs/1704.07783) and claimed to have a star formation rate of $> 10^{3}\mathrm{M_{\odot}yr^{-1}}$
@@ -13,6 +13,8 @@ import pylab as plt
 %matplotlib inline
 from astropy import wcs
 import seaborn as sns
+import glob
+
 
 import numpy as np
 import xidplus
@@ -52,6 +54,32 @@ except:
 esb=Table.read('../../../data/MRR2018_tables/{}_sources.csv'.format(field[0]),format='ascii',encoding='utf-8')
 
 ```
+
+
+```python
+esb['S\xa0250 (mJy)']
+```
+
+
+
+
+&lt;MaskedColumn name=&apos;S\xa0250 (mJy)&apos; dtype=&apos;float64&apos; length=12&gt;
+<table>
+<tr><td>53.7</td></tr>
+<tr><td>--</td></tr>
+<tr><td>59.3</td></tr>
+<tr><td>43.4</td></tr>
+<tr><td>73.1</td></tr>
+<tr><td>88.4</td></tr>
+<tr><td>46.1</td></tr>
+<tr><td>96.2</td></tr>
+<tr><td>71.2</td></tr>
+<tr><td>43.5</td></tr>
+<tr><td>40.4</td></tr>
+<tr><td>48.5</td></tr>
+</table>
+
+
 
 
 ```python
@@ -130,8 +158,8 @@ prior_predictive=Predictive(SED_prior.spire_model_CIGALE,posterior_samples = {},
 prior_pred=prior_predictive(random.PRNGKey(0),priors_prior_pred,phys_prior,hier_params)
 ```
 
-    CPU times: user 7.36 s, sys: 65.5 ms, total: 7.43 s
-    Wall time: 7.39 s
+    CPU times: user 6.75 s, sys: 53.3 ms, total: 6.81 s
+    Wall time: 6.77 s
 
 
 ## Fit Real data
@@ -151,10 +179,10 @@ rng_key = random.PRNGKey(0)
 mcmc.run(rng_key,priors,phys_prior,hier_params)
 ```
 
-    sample: 100%|██████████| 1000/1000 [01:08<00:00, 14.49it/s, 255 steps of size 1.56e-02. acc. prob=0.87]
-    sample: 100%|██████████| 1000/1000 [01:13<00:00, 13.64it/s, 255 steps of size 1.86e-02. acc. prob=0.80]
-    sample: 100%|██████████| 1000/1000 [01:38<00:00, 10.16it/s, 511 steps of size 1.00e-02. acc. prob=0.81]
-    sample: 100%|██████████| 1000/1000 [01:15<00:00, 13.22it/s, 255 steps of size 1.23e-02. acc. prob=0.88]
+    sample: 100%|██████████| 1000/1000 [01:08<00:00, 14.50it/s, 255 steps of size 1.56e-02. acc. prob=0.87]
+    sample: 100%|██████████| 1000/1000 [01:14<00:00, 13.49it/s, 255 steps of size 1.86e-02. acc. prob=0.80]
+    sample: 100%|██████████| 1000/1000 [01:33<00:00, 10.67it/s, 511 steps of size 1.00e-02. acc. prob=0.81]
+    sample: 100%|██████████| 1000/1000 [01:16<00:00, 13.16it/s, 255 steps of size 1.23e-02. acc. prob=0.88]
 
 
 
@@ -204,7 +232,7 @@ plt.subplots_adjust(hspace=0.5,wspace=0.5)
 
 
     
-![png](fit_10_files/fit_10_20_0.png)
+![png](fit_10_files/fit_10_21_0.png)
     
 
 
@@ -238,13 +266,13 @@ g.map_upper(sns.kdeplot,alpha=0.5,color='Red',n_levels=5, shade=False,linewidth=
 
 
 
-    <seaborn.axisgrid.PairGrid at 0x2aaba2a710a0>
+    <seaborn.axisgrid.PairGrid at 0x2aaba246b310>
 
 
 
 
     
-![png](fit_10_files/fit_10_24_1.png)
+![png](fit_10_files/fit_10_25_1.png)
     
 
 
@@ -274,7 +302,7 @@ axes[2].set_ylabel('Redshift')
 
 
     
-![png](fit_10_files/fit_10_26_1.png)
+![png](fit_10_files/fit_10_27_1.png)
     
 
 
@@ -289,8 +317,8 @@ prior_pred_samp=prior_predictive_samp(random.PRNGKey(0),priors_prior_pred,phys_p
 mod_map_array_samp=[prior_pred_samp['obs_psw'].T,prior_pred_samp['obs_pmw'].T,prior_pred_samp['obs_plw'].T]
 ```
 
-    CPU times: user 1.79 s, sys: 11.9 ms, total: 1.81 s
-    Wall time: 1.77 s
+    CPU times: user 1.7 s, sys: 12 ms, total: 1.71 s
+    Wall time: 1.69 s
 
 
 
@@ -316,7 +344,7 @@ figures,fig=xidplus.plot_map(priors)
 
 
     
-![png](fit_10_files/fit_10_30_0.png)
+![png](fit_10_files/fit_10_31_0.png)
     
 
 
@@ -350,7 +378,7 @@ for i in range(0, len(priors)):
 
 
     
-![png](fit_10_files/fit_10_31_0.png)
+![png](fit_10_files/fit_10_32_0.png)
     
 
 
@@ -417,6 +445,22 @@ for s in range(0,mod_map_array_samp[0].shape[-1]):
     1000
 
 
+
+```python
+
+```
+
+
+```python
+
+
+```
+
+
+```python
+
+```
+
 <span id="papermill-error-cell" style="color:red; font-family:Helvetica Neue, Helvetica, Arial, sans-serif; font-size:2em;">Execution using papermill encountered an exception here and stopped:</span>
 
 
@@ -426,10 +470,12 @@ band=[250,350,500]
 scat_flux=[]
 scat_pos=[]
 for b in band:
-    scat=Table.read('../../../data/WP5-{}-SCAT{}-v1.0.fits.gz'.format(field[0],b))
+    file=glob.glob('../../../data/*-{}_SCAT{}SXT_DR2.fits.gz'.format(field[0],b))
+    scat=Table.read(file[0])
     orig_scat_coords=SkyCoord(scat['RA'],scat['Dec'])
+    
     idx, d2d, d3d = c.match_to_catalog_sky(orig_scat_coords)
-    scat_flux.append(scat['F_SPIRE_{}'.format(b)][idx].data)
+    scat_flux.append(scat['Flux'][idx].data)
     scat_pos.append(orig_scat_coords[idx])
 scat_flux=np.array(scat_flux)
 ```
@@ -437,49 +483,17 @@ scat_flux=np.array(scat_flux)
 
     ---------------------------------------------------------------------------
 
-    FileNotFoundError                         Traceback (most recent call last)
+    IndexError                                Traceback (most recent call last)
 
-    <ipython-input-26-01278672dd2e> in <module>
-          4 scat_pos=[]
+    <ipython-input-27-02065947e905> in <module>
           5 for b in band:
-    ----> 6    scat=Table.read('../../../data/WP5-{}-SCAT{}-v1.0.fits.gz'.format(field[0],b))
-          7    orig_scat_coords=SkyCoord(scat['RA'],scat['Dec'])
-          8    idx, d2d, d3d = c.match_to_catalog_sky(orig_scat_coords)
+          6    file=glob.glob('../../../data/*-{}_SCAT{}SXT_DR2.fits.gz'.format(field[0],b))
+    ----> 7    scat=Table.read(file[0])
+          8    orig_scat_coords=SkyCoord(scat['RA'],scat['Dec'])
+          9 
 
 
-    /research/astro/fir/HELP/help_python/miniconda3/envs/herschelhelp/lib/python3.8/site-packages/astropy/table/connect.py in __call__(self, *args, **kwargs)
-         50     def __call__(self, *args, **kwargs):
-         51         cls = self._cls
-    ---> 52         out = registry.read(cls, *args, **kwargs)
-         53 
-         54         # For some readers (e.g., ascii.ecsv), the returned `out` class is not
-
-
-    /research/astro/fir/HELP/help_python/miniconda3/envs/herschelhelp/lib/python3.8/site-packages/astropy/io/registry.py in read(cls, format, *args, **kwargs)
-        506                     try:
-        507                         ctx = get_readable_fileobj(args[0], encoding='binary')
-    --> 508                         fileobj = ctx.__enter__()
-        509                     except OSError:
-        510                         raise
-
-
-    /research/astro/fir/HELP/help_python/miniconda3/envs/herschelhelp/lib/python3.8/contextlib.py in __enter__(self)
-        111         del self.args, self.kwds, self.func
-        112         try:
-    --> 113             return next(self.gen)
-        114         except StopIteration:
-        115             raise RuntimeError("generator didn't yield") from None
-
-
-    /research/astro/fir/HELP/help_python/miniconda3/envs/herschelhelp/lib/python3.8/site-packages/astropy/utils/data.py in get_readable_fileobj(name_or_obj, encoding, cache, show_progress, remote_timeout, sources, http_headers)
-        236                 timeout=remote_timeout, sources=sources,
-        237                 http_headers=http_headers)
-    --> 238         fileobj = io.FileIO(name_or_obj, 'r')
-        239         if is_url and not cache:
-        240             delete_fds.append(fileobj)
-
-
-    FileNotFoundError: [Errno 2] No such file or directory: '../../../data/WP5-XMM-LSS-SCAT250-v1.0.fits.gz'
+    IndexError: list index out of range
 
 
 
