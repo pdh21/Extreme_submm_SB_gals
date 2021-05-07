@@ -24,7 +24,7 @@ import os
 
 ```python
 
-emulator_path=['/research/astro/fir/HELP/XID_plus/docs/notebooks/examples/SED_emulator/CIGALE_emulator_20210420_log10sfr_uniformAGN_z.npz']
+emulator_path=['/Users/pdh21/Google_Drive/WORK/XID_plus/docs/notebooks/examples/SED_emulator/CIGALE_emulator_20210420_log10sfr_uniformAGN_z.npz']
 field=['Lockman-SWIRE']
 ```
 
@@ -52,45 +52,6 @@ except:
 esb=Table.read('../../../data/MRR2018_tables/{}_sources.csv'.format(field[0]),format='ascii',encoding='utf-8')
 
 ```
-
-
-```python
-esb['S\xa0250 (mJy)']
-```
-
-
-
-
-&lt;MaskedColumn name=&apos;S\xa0250 (mJy)&apos; dtype=&apos;float64&apos; length=27&gt;
-<table>
-<tr><td>131.6</td></tr>
-<tr><td>95.7</td></tr>
-<tr><td>--</td></tr>
-<tr><td>44.2</td></tr>
-<tr><td>56.9</td></tr>
-<tr><td>116.5</td></tr>
-<tr><td>65.7</td></tr>
-<tr><td>--</td></tr>
-<tr><td>81.9</td></tr>
-<tr><td>--</td></tr>
-<tr><td>66.4</td></tr>
-<tr><td>43.5</td></tr>
-<tr><td>...</td></tr>
-<tr><td>76.1</td></tr>
-<tr><td>56.6</td></tr>
-<tr><td>--</td></tr>
-<tr><td>25.5</td></tr>
-<tr><td>183.8</td></tr>
-<tr><td>75.0</td></tr>
-<tr><td>--</td></tr>
-<tr><td>35.3</td></tr>
-<tr><td>43.1</td></tr>
-<tr><td>43.5</td></tr>
-<tr><td>--</td></tr>
-<tr><td>--</td></tr>
-</table>
-
-
 
 
 ```python
@@ -169,8 +130,8 @@ prior_predictive=Predictive(SED_prior.spire_model_CIGALE,posterior_samples = {},
 prior_pred=prior_predictive(random.PRNGKey(0),priors_prior_pred,phys_prior,hier_params)
 ```
 
-    CPU times: user 6.99 s, sys: 111 ms, total: 7.1 s
-    Wall time: 7.05 s
+    CPU times: user 8.53 s, sys: 69.5 ms, total: 8.6 s
+    Wall time: 8.54 s
 
 
 ## Fit Real data
@@ -187,13 +148,13 @@ from operator import attrgetter
 nuts_kernel = NUTS(SED_prior.spire_model_CIGALE,init_strategy=numpyro.infer.init_to_feasible())
 mcmc = MCMC(nuts_kernel, num_samples=500, num_warmup=500,num_chains=4,chain_method='parallel')
 rng_key = random.PRNGKey(0)
-mcmc.run(rng_key,priors,phys_prior,hier_params)
+mcmc.run(rng_key,priors,phys_prior,hier_params,extra_fields=["num_steps", "energy"])
 ```
 
-    sample: 100%|██████████| 1000/1000 [05:19<00:00,  3.13it/s, 255 steps of size 1.26e-02. acc. prob=0.88]
-    sample: 100%|██████████| 1000/1000 [05:20<00:00,  3.12it/s, 255 steps of size 1.33e-02. acc. prob=0.89]
-    sample: 100%|██████████| 1000/1000 [05:28<00:00,  3.05it/s, 255 steps of size 1.39e-02. acc. prob=0.84]
-    sample: 100%|██████████| 1000/1000 [05:54<00:00,  2.82it/s, 255 steps of size 1.62e-02. acc. prob=0.86]
+    sample: 100%|██████████| 1000/1000 [07:16<00:00,  2.29it/s, 255 steps of size 1.26e-02. acc. prob=0.88]
+    sample: 100%|██████████| 1000/1000 [07:49<00:00,  2.13it/s, 255 steps of size 1.33e-02. acc. prob=0.89]
+    sample: 100%|██████████| 1000/1000 [07:51<00:00,  2.12it/s, 255 steps of size 1.39e-02. acc. prob=0.84]
+    sample: 100%|██████████| 1000/1000 [07:55<00:00,  2.11it/s, 255 steps of size 1.62e-02. acc. prob=0.86]
 
 
 
@@ -243,7 +204,7 @@ plt.subplots_adjust(hspace=0.5,wspace=0.5)
 
 
     
-![png](fit_5_files/fit_5_20_0.png)
+![png](fit_5_files/fit_5_19_0.png)
     
 
 
@@ -277,13 +238,13 @@ g.map_upper(sns.kdeplot,alpha=0.5,color='Red',n_levels=5, shade=False,linewidth=
 
 
 
-    <seaborn.axisgrid.PairGrid at 0x2aab6ac83f70>
+    <seaborn.axisgrid.PairGrid at 0x2aab9667a100>
 
 
 
 
     
-![png](fit_5_files/fit_5_24_1.png)
+![png](fit_5_files/fit_5_23_1.png)
     
 
 
@@ -313,7 +274,7 @@ axes[2].set_ylabel('Redshift')
 
 
     
-![png](fit_5_files/fit_5_26_1.png)
+![png](fit_5_files/fit_5_25_1.png)
     
 
 
@@ -328,8 +289,8 @@ prior_pred_samp=prior_predictive_samp(random.PRNGKey(0),priors_prior_pred,phys_p
 mod_map_array_samp=[prior_pred_samp['obs_psw'].T,prior_pred_samp['obs_pmw'].T,prior_pred_samp['obs_plw'].T]
 ```
 
-    CPU times: user 1.8 s, sys: 6.41 ms, total: 1.8 s
-    Wall time: 1.75 s
+    CPU times: user 2.21 s, sys: 12.5 ms, total: 2.22 s
+    Wall time: 2.22 s
 
 
 
@@ -355,7 +316,7 @@ figures,fig=xidplus.plot_map(priors)
 
 
     
-![png](fit_5_files/fit_5_30_0.png)
+![png](fit_5_files/fit_5_29_0.png)
     
 
 
@@ -389,8 +350,42 @@ for i in range(0, len(priors)):
 
 
     
-![png](fit_5_files/fit_5_31_0.png)
+![png](fit_5_files/fit_5_30_0.png)
     
+
+
+## Save the samples using arviz
+
+
+```python
+import arviz as az
+```
+
+
+```python
+numpyro_data = az.from_numpyro(
+    mcmc,
+    prior=prior_pred,
+    posterior_predictive=prior_pred_samp,
+    coords={"src": np.arange(0,priors[0].nsrc),
+           "band":np.arange(0,3)},
+    dims={"agn": ["src"],
+         "bkg":["band"],
+         "redshift":["src"],
+          "sfr":["src"]},
+)
+```
+
+
+```python
+numpyro_data.to_netcdf('./output/{}/prior_'.format(field[0])+esb['field'][source[0]]+'_'+str(source[0])+'.nc')
+```
+
+
+
+
+    './output/Lockman-SWIRE/prior_Lockman-SWIRE_4.nc'
+
 
 
 Read in the source we are interested in from Rowan-Robinsons's catalogue.
@@ -505,7 +500,7 @@ for i in range(0,3):
 
 
     
-![png](fit_5_files/fit_5_40_0.png)
+![png](fit_5_files/fit_5_43_0.png)
     
 
 
@@ -613,7 +608,7 @@ for i in range(0,len(priors)):
 
 
     
-![png](fit_5_files/fit_5_44_0.png)
+![png](fit_5_files/fit_5_47_0.png)
     
 
 
@@ -650,32 +645,32 @@ g.axes[-1,-1].axvline(x=esb[source[0]]['Z\xa0comb'],color='black')
 
 
 
-    [<matplotlib.lines.Line2D at 0x2aabcba88580>,
-     <matplotlib.lines.Line2D at 0x2aabcba88ac0>,
-     <matplotlib.lines.Line2D at 0x2aabcba88fa0>,
-     <matplotlib.lines.Line2D at 0x2aabcba8f4c0>,
-     <matplotlib.lines.Line2D at 0x2aabcba8f9a0>,
-     <matplotlib.lines.Line2D at 0x2aabcba8fe80>,
-     <matplotlib.lines.Line2D at 0x2aabcba993a0>,
-     <matplotlib.lines.Line2D at 0x2aabcba99880>,
-     <matplotlib.lines.Line2D at 0x2aabcba99d60>,
-     <matplotlib.lines.Line2D at 0x2aabcbaa4280>,
-     <matplotlib.lines.Line2D at 0x2aabcbaa4760>,
-     <matplotlib.lines.Line2D at 0x2aabcbaa4c40>,
-     <matplotlib.lines.Line2D at 0x2aabcbaaf160>,
-     <matplotlib.lines.Line2D at 0x2aabcbaaf640>,
-     <matplotlib.lines.Line2D at 0x2aabcbaafb20>,
-     <matplotlib.lines.Line2D at 0x2aabcbaaff10>,
-     <matplotlib.lines.Line2D at 0x2aabcbab9520>,
-     <matplotlib.lines.Line2D at 0x2aabcbab9a00>,
-     <matplotlib.lines.Line2D at 0x2aabcbab9ee0>,
-     <matplotlib.lines.Line2D at 0x2aabcbac4400>]
+    [<matplotlib.lines.Line2D at 0x2aabcd122490>,
+     <matplotlib.lines.Line2D at 0x2aabcd1229d0>,
+     <matplotlib.lines.Line2D at 0x2aabcd122eb0>,
+     <matplotlib.lines.Line2D at 0x2aabcd12d3d0>,
+     <matplotlib.lines.Line2D at 0x2aabcd12d8b0>,
+     <matplotlib.lines.Line2D at 0x2aabcd12dd90>,
+     <matplotlib.lines.Line2D at 0x2aabcd1372b0>,
+     <matplotlib.lines.Line2D at 0x2aabcd137790>,
+     <matplotlib.lines.Line2D at 0x2aabcd137c70>,
+     <matplotlib.lines.Line2D at 0x2aabcd141190>,
+     <matplotlib.lines.Line2D at 0x2aabcd141670>,
+     <matplotlib.lines.Line2D at 0x2aabcd141b50>,
+     <matplotlib.lines.Line2D at 0x2aabcd141f40>,
+     <matplotlib.lines.Line2D at 0x2aabcd14d550>,
+     <matplotlib.lines.Line2D at 0x2aabcd14da30>,
+     <matplotlib.lines.Line2D at 0x2aabcd14df10>,
+     <matplotlib.lines.Line2D at 0x2aabcd155430>,
+     <matplotlib.lines.Line2D at 0x2aabcd155910>,
+     <matplotlib.lines.Line2D at 0x2aabcd155df0>,
+     <matplotlib.lines.Line2D at 0x2aabcd163310>]
 
 
 
 
     
-![png](fit_5_files/fit_5_46_1.png)
+![png](fit_5_files/fit_5_49_1.png)
     
 
 

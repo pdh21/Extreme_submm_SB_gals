@@ -1,5 +1,3 @@
-<span style="color:red; font-family:Helvetica Neue, Helvetica, Arial, sans-serif; font-size:2em;">An Exception was encountered at '<a href="#papermill-error-cell">In [27]</a>'.</span>
-
 # Applying XID+CIGALE to Extreme Starbursts
 In this notebook, we read in the data files and prepare them for fitting with XID+CIGALE, the SED prior model extension to XID+. Here we focus on sources in [Rowan-Robinson et al. 2018](https://arxiv.org/abs/1704.07783) and claimed to have a star formation rate of $> 10^{3}\mathrm{M_{\odot}yr^{-1}}$
 
@@ -26,7 +24,7 @@ import os
 
 ```python
 
-emulator_path=['/research/astro/fir/HELP/XID_plus/docs/notebooks/examples/SED_emulator/CIGALE_emulator_20210420_log10sfr_uniformAGN_z.npz']
+emulator_path=['/Users/pdh21/Google_Drive/WORK/XID_plus/docs/notebooks/examples/SED_emulator/CIGALE_emulator_20210420_log10sfr_uniformAGN_z.npz']
 field=['Lockman-SWIRE']
 ```
 
@@ -54,32 +52,6 @@ except:
 esb=Table.read('../../../data/MRR2018_tables/{}_sources.csv'.format(field[0]),format='ascii',encoding='utf-8')
 
 ```
-
-
-```python
-esb['S\xa0250 (mJy)']
-```
-
-
-
-
-&lt;MaskedColumn name=&apos;S\xa0250 (mJy)&apos; dtype=&apos;float64&apos; length=12&gt;
-<table>
-<tr><td>53.7</td></tr>
-<tr><td>--</td></tr>
-<tr><td>59.3</td></tr>
-<tr><td>43.4</td></tr>
-<tr><td>73.1</td></tr>
-<tr><td>88.4</td></tr>
-<tr><td>46.1</td></tr>
-<tr><td>96.2</td></tr>
-<tr><td>71.2</td></tr>
-<tr><td>43.5</td></tr>
-<tr><td>40.4</td></tr>
-<tr><td>48.5</td></tr>
-</table>
-
-
 
 
 ```python
@@ -158,8 +130,8 @@ prior_predictive=Predictive(SED_prior.spire_model_CIGALE,posterior_samples = {},
 prior_pred=prior_predictive(random.PRNGKey(0),priors_prior_pred,phys_prior,hier_params)
 ```
 
-    CPU times: user 6.99 s, sys: 72.6 ms, total: 7.06 s
-    Wall time: 7.02 s
+    CPU times: user 8.09 s, sys: 51.2 ms, total: 8.14 s
+    Wall time: 8.17 s
 
 
 ## Fit Real data
@@ -176,13 +148,13 @@ from operator import attrgetter
 nuts_kernel = NUTS(SED_prior.spire_model_CIGALE,init_strategy=numpyro.infer.init_to_feasible())
 mcmc = MCMC(nuts_kernel, num_samples=500, num_warmup=500,num_chains=4,chain_method='parallel')
 rng_key = random.PRNGKey(0)
-mcmc.run(rng_key,priors,phys_prior,hier_params)
+mcmc.run(rng_key,priors,phys_prior,hier_params,extra_fields=["num_steps", "energy"])
 ```
 
-    sample: 100%|██████████| 1000/1000 [00:32<00:00, 30.58it/s, 63 steps of size 1.01e-01. acc. prob=0.86]
-    sample: 100%|██████████| 1000/1000 [00:32<00:00, 31.03it/s, 31 steps of size 1.03e-01. acc. prob=0.82]
-    sample: 100%|██████████| 1000/1000 [00:35<00:00, 28.40it/s, 63 steps of size 9.13e-02. acc. prob=0.85]
-    sample: 100%|██████████| 1000/1000 [00:36<00:00, 27.58it/s, 63 steps of size 8.65e-02. acc. prob=0.86]
+    sample: 100%|██████████| 1000/1000 [00:27<00:00, 36.48it/s, 63 steps of size 1.01e-01. acc. prob=0.86]
+    sample: 100%|██████████| 1000/1000 [00:27<00:00, 35.79it/s, 31 steps of size 1.03e-01. acc. prob=0.82]
+    sample: 100%|██████████| 1000/1000 [00:29<00:00, 34.19it/s, 63 steps of size 9.13e-02. acc. prob=0.85]
+    sample: 100%|██████████| 1000/1000 [00:30<00:00, 32.77it/s, 63 steps of size 8.65e-02. acc. prob=0.86]
 
 
 
@@ -232,7 +204,7 @@ plt.subplots_adjust(hspace=0.5,wspace=0.5)
 
 
     
-![png](fit_4_files/fit_4_21_0.png)
+![png](fit_4_files/fit_4_19_0.png)
     
 
 
@@ -266,13 +238,13 @@ g.map_upper(sns.kdeplot,alpha=0.5,color='Red',n_levels=5, shade=False,linewidth=
 
 
 
-    <seaborn.axisgrid.PairGrid at 0x2aaba28ef730>
+    <seaborn.axisgrid.PairGrid at 0x2aab826958e0>
 
 
 
 
     
-![png](fit_4_files/fit_4_25_1.png)
+![png](fit_4_files/fit_4_23_1.png)
     
 
 
@@ -302,7 +274,7 @@ axes[2].set_ylabel('Redshift')
 
 
     
-![png](fit_4_files/fit_4_27_1.png)
+![png](fit_4_files/fit_4_25_1.png)
     
 
 
@@ -317,8 +289,8 @@ prior_pred_samp=prior_predictive_samp(random.PRNGKey(0),priors_prior_pred,phys_p
 mod_map_array_samp=[prior_pred_samp['obs_psw'].T,prior_pred_samp['obs_pmw'].T,prior_pred_samp['obs_plw'].T]
 ```
 
-    CPU times: user 2.06 s, sys: 19.8 ms, total: 2.08 s
-    Wall time: 2.06 s
+    CPU times: user 2.26 s, sys: 7.85 ms, total: 2.27 s
+    Wall time: 2.24 s
 
 
 
@@ -344,7 +316,7 @@ figures,fig=xidplus.plot_map(priors)
 
 
     
-![png](fit_4_files/fit_4_31_0.png)
+![png](fit_4_files/fit_4_29_0.png)
     
 
 
@@ -378,8 +350,42 @@ for i in range(0, len(priors)):
 
 
     
-![png](fit_4_files/fit_4_32_0.png)
+![png](fit_4_files/fit_4_30_0.png)
     
+
+
+## Save the samples using arviz
+
+
+```python
+import arviz as az
+```
+
+
+```python
+numpyro_data = az.from_numpyro(
+    mcmc,
+    prior=prior_pred,
+    posterior_predictive=prior_pred_samp,
+    coords={"src": np.arange(0,priors[0].nsrc),
+           "band":np.arange(0,3)},
+    dims={"agn": ["src"],
+         "bkg":["band"],
+         "redshift":["src"],
+          "sfr":["src"]},
+)
+```
+
+
+```python
+numpyro_data.to_netcdf('./output/{}/prior_'.format(field[0])+esb['field'][source[0]]+'_'+str(source[0])+'.nc')
+```
+
+
+
+
+    './output/XMM-LSS/prior_XMM-LSS_3.nc'
+
 
 
 Read in the source we are interested in from Rowan-Robinsons's catalogue.
@@ -461,8 +467,6 @@ for s in range(0,mod_map_array_samp[0].shape[-1]):
 
 ```
 
-<span id="papermill-error-cell" style="color:red; font-family:Helvetica Neue, Helvetica, Arial, sans-serif; font-size:2em;">Execution using papermill encountered an exception here and stopped:</span>
-
 
 ```python
  # get original fluxes from scat
@@ -481,22 +485,6 @@ scat_flux=np.array(scat_flux)
 ```
 
 
-    ---------------------------------------------------------------------------
-
-    IndexError                                Traceback (most recent call last)
-
-    <ipython-input-27-02065947e905> in <module>
-          5 for b in band:
-          6    file=glob.glob('../../../data/*-{}_SCAT{}SXT_DR2.fits.gz'.format(field[0],b))
-    ----> 7    scat=Table.read(file[0])
-          8    orig_scat_coords=SkyCoord(scat['RA'],scat['Dec'])
-          9 
-
-
-    IndexError: list index out of range
-
-
-
 ```python
 orig_map=xidplus.plot_map(priors)
 for i in range(0,3):
@@ -509,6 +497,12 @@ for i in range(0,3):
                 marker='x', s=200, alpha=0.5)
 
 ```
+
+
+    
+![png](fit_4_files/fit_4_43_0.png)
+    
+
 
 
 ```python
@@ -530,6 +524,13 @@ src_f.shape
 ```
 
 
+
+
+    (2000, 36, 3)
+
+
+
+
 ```python
 #find the sources that are within a certain separation of the extreme starburst candidate
 sep=12
@@ -537,6 +538,14 @@ separation=new_scat_pos[0].separation(SkyCoord(priors[0].sra,priors[0].sdec)).ar
 contrib_sources=separation<sep
 print(' Sources \n {} \n are possible contributers to flux of extreme starburst'.format(priors[0].ID[contrib_sources]))
 ```
+
+     Sources 
+               help_id          
+    ---------------------------
+    HELP_J022652.679-035754.351
+    HELP_J022652.716-035749.691 
+     are possible contributers to flux of extreme starburst
+
 
 
 ```python
@@ -592,6 +601,12 @@ for i in range(0,len(priors)):
 
 ```
 
+
+    
+![png](fit_4_files/fit_4_47_0.png)
+    
+
+
 ### Parameters of contributing sources
 The physical parameters of our sources which could be contributing to the extreme starburst
 
@@ -621,6 +636,23 @@ g.axes[-1,-1].axvline(x=esb[source[0]]['Z\xa0comb'],color='black')
 
 
 ```
+
+
+
+
+    [<matplotlib.lines.Line2D at 0x2aabc090de20>,
+     <matplotlib.lines.Line2D at 0x2aabc0917400>,
+     <matplotlib.lines.Line2D at 0x2aabc0917940>,
+     <matplotlib.lines.Line2D at 0x2aabc0917e80>,
+     <matplotlib.lines.Line2D at 0x2aabc0920400>]
+
+
+
+
+    
+![png](fit_4_files/fit_4_49_1.png)
+    
+
 
 update the webtable to identify issues
 
