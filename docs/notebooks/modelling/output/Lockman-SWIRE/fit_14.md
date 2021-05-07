@@ -24,7 +24,7 @@ import os
 
 ```python
 
-emulator_path=['/research/astro/fir/HELP/XID_plus/docs/notebooks/examples/SED_emulator/CIGALE_emulator_20210420_log10sfr_uniformAGN_z.npz']
+emulator_path=['/Users/pdh21/Google_Drive/WORK/XID_plus/docs/notebooks/examples/SED_emulator/CIGALE_emulator_20210420_log10sfr_uniformAGN_z.npz']
 field=['Lockman-SWIRE']
 ```
 
@@ -52,45 +52,6 @@ except:
 esb=Table.read('../../../data/MRR2018_tables/{}_sources.csv'.format(field[0]),format='ascii',encoding='utf-8')
 
 ```
-
-
-```python
-esb['S\xa0250 (mJy)']
-```
-
-
-
-
-&lt;MaskedColumn name=&apos;S\xa0250 (mJy)&apos; dtype=&apos;float64&apos; length=27&gt;
-<table>
-<tr><td>131.6</td></tr>
-<tr><td>95.7</td></tr>
-<tr><td>--</td></tr>
-<tr><td>44.2</td></tr>
-<tr><td>56.9</td></tr>
-<tr><td>116.5</td></tr>
-<tr><td>65.7</td></tr>
-<tr><td>--</td></tr>
-<tr><td>81.9</td></tr>
-<tr><td>--</td></tr>
-<tr><td>66.4</td></tr>
-<tr><td>43.5</td></tr>
-<tr><td>...</td></tr>
-<tr><td>76.1</td></tr>
-<tr><td>56.6</td></tr>
-<tr><td>--</td></tr>
-<tr><td>25.5</td></tr>
-<tr><td>183.8</td></tr>
-<tr><td>75.0</td></tr>
-<tr><td>--</td></tr>
-<tr><td>35.3</td></tr>
-<tr><td>43.1</td></tr>
-<tr><td>43.5</td></tr>
-<tr><td>--</td></tr>
-<tr><td>--</td></tr>
-</table>
-
-
 
 
 ```python
@@ -169,8 +130,8 @@ prior_predictive=Predictive(SED_prior.spire_model_CIGALE,posterior_samples = {},
 prior_pred=prior_predictive(random.PRNGKey(0),priors_prior_pred,phys_prior,hier_params)
 ```
 
-    CPU times: user 10.7 s, sys: 120 ms, total: 10.8 s
-    Wall time: 10.8 s
+    CPU times: user 9.66 s, sys: 97.4 ms, total: 9.76 s
+    Wall time: 9.69 s
 
 
 ## Fit Real data
@@ -187,13 +148,13 @@ from operator import attrgetter
 nuts_kernel = NUTS(SED_prior.spire_model_CIGALE,init_strategy=numpyro.infer.init_to_feasible())
 mcmc = MCMC(nuts_kernel, num_samples=500, num_warmup=500,num_chains=4,chain_method='parallel')
 rng_key = random.PRNGKey(0)
-mcmc.run(rng_key,priors,phys_prior,hier_params)
+mcmc.run(rng_key,priors,phys_prior,hier_params,extra_fields=["num_steps", "energy"])
 ```
 
-    sample: 100%|██████████| 1000/1000 [01:56<00:00,  8.60it/s, 127 steps of size 2.73e-02. acc. prob=0.85]
-    sample: 100%|██████████| 1000/1000 [01:53<00:00,  8.84it/s, 127 steps of size 2.80e-02. acc. prob=0.85]
-    sample: 100%|██████████| 1000/1000 [02:08<00:00,  7.79it/s, 255 steps of size 2.52e-02. acc. prob=0.84]
-    sample: 100%|██████████| 1000/1000 [02:07<00:00,  7.86it/s, 127 steps of size 2.58e-02. acc. prob=0.86]
+    sample: 100%|██████████| 1000/1000 [01:51<00:00,  8.94it/s, 127 steps of size 2.73e-02. acc. prob=0.85]
+    sample: 100%|██████████| 1000/1000 [01:49<00:00,  9.13it/s, 127 steps of size 2.80e-02. acc. prob=0.85]
+    sample: 100%|██████████| 1000/1000 [02:04<00:00,  8.04it/s, 255 steps of size 2.52e-02. acc. prob=0.84]
+    sample: 100%|██████████| 1000/1000 [02:05<00:00,  7.94it/s, 127 steps of size 2.58e-02. acc. prob=0.86]
 
 
 
@@ -243,7 +204,7 @@ plt.subplots_adjust(hspace=0.5,wspace=0.5)
 
 
     
-![png](fit_14_files/fit_14_20_0.png)
+![png](fit_14_files/fit_14_19_0.png)
     
 
 
@@ -277,13 +238,13 @@ g.map_upper(sns.kdeplot,alpha=0.5,color='Red',n_levels=5, shade=False,linewidth=
 
 
 
-    <seaborn.axisgrid.PairGrid at 0x2aaba528dac0>
+    <seaborn.axisgrid.PairGrid at 0x2aab55b247f0>
 
 
 
 
     
-![png](fit_14_files/fit_14_24_1.png)
+![png](fit_14_files/fit_14_23_1.png)
     
 
 
@@ -313,7 +274,7 @@ axes[2].set_ylabel('Redshift')
 
 
     
-![png](fit_14_files/fit_14_26_1.png)
+![png](fit_14_files/fit_14_25_1.png)
     
 
 
@@ -328,8 +289,8 @@ prior_pred_samp=prior_predictive_samp(random.PRNGKey(0),priors_prior_pred,phys_p
 mod_map_array_samp=[prior_pred_samp['obs_psw'].T,prior_pred_samp['obs_pmw'].T,prior_pred_samp['obs_plw'].T]
 ```
 
-    CPU times: user 2.82 s, sys: 24 ms, total: 2.84 s
-    Wall time: 2.8 s
+    CPU times: user 2.73 s, sys: 47.9 ms, total: 2.77 s
+    Wall time: 2.74 s
 
 
 
@@ -355,7 +316,7 @@ figures,fig=xidplus.plot_map(priors)
 
 
     
-![png](fit_14_files/fit_14_30_0.png)
+![png](fit_14_files/fit_14_29_0.png)
     
 
 
@@ -389,8 +350,42 @@ for i in range(0, len(priors)):
 
 
     
-![png](fit_14_files/fit_14_31_0.png)
+![png](fit_14_files/fit_14_30_0.png)
     
+
+
+## Save the samples using arviz
+
+
+```python
+import arviz as az
+```
+
+
+```python
+numpyro_data = az.from_numpyro(
+    mcmc,
+    prior=prior_pred,
+    posterior_predictive=prior_pred_samp,
+    coords={"src": np.arange(0,priors[0].nsrc),
+           "band":np.arange(0,3)},
+    dims={"agn": ["src"],
+         "bkg":["band"],
+         "redshift":["src"],
+          "sfr":["src"]},
+)
+```
+
+
+```python
+numpyro_data.to_netcdf('./output/{}/prior_'.format(field[0])+esb['field'][source[0]]+'_'+str(source[0])+'.nc')
+```
+
+
+
+
+    './output/Lockman-SWIRE/prior_Lockman-SWIRE_13.nc'
+
 
 
 Read in the source we are interested in from Rowan-Robinsons's catalogue.
@@ -505,7 +500,7 @@ for i in range(0,3):
 
 
     
-![png](fit_14_files/fit_14_40_0.png)
+![png](fit_14_files/fit_14_43_0.png)
     
 
 
@@ -608,7 +603,7 @@ for i in range(0,len(priors)):
 
 
     
-![png](fit_14_files/fit_14_44_0.png)
+![png](fit_14_files/fit_14_47_0.png)
     
 
 
@@ -645,17 +640,17 @@ g.axes[-1,-1].axvline(x=esb[source[0]]['Z\xa0comb'],color='black')
 
 
 
-    [<matplotlib.lines.Line2D at 0x2aabb3100d60>,
-     <matplotlib.lines.Line2D at 0x2aabb1690a60>,
-     <matplotlib.lines.Line2D at 0x2aabb09a92b0>,
-     <matplotlib.lines.Line2D at 0x2aabb1cc9d90>,
-     <matplotlib.lines.Line2D at 0x2aabb07364f0>]
+    [<matplotlib.lines.Line2D at 0x2aabc07d3d00>,
+     <matplotlib.lines.Line2D at 0x2aabc07dc640>,
+     <matplotlib.lines.Line2D at 0x2aabc07dcb80>,
+     <matplotlib.lines.Line2D at 0x2aabc07e5100>,
+     <matplotlib.lines.Line2D at 0x2aabc07e5640>]
 
 
 
 
     
-![png](fit_14_files/fit_14_46_1.png)
+![png](fit_14_files/fit_14_49_1.png)
     
 
 

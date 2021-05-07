@@ -1,5 +1,3 @@
-<span style="color:red; font-family:Helvetica Neue, Helvetica, Arial, sans-serif; font-size:2em;">An Exception was encountered at '<a href="#papermill-error-cell">In [15]</a>'.</span>
-
 # Applying XID+CIGALE to Extreme Starbursts
 In this notebook, we read in the data files and prepare them for fitting with XID+CIGALE, the SED prior model extension to XID+. Here we focus on sources in [Rowan-Robinson et al. 2018](https://arxiv.org/abs/1704.07783) and claimed to have a star formation rate of $> 10^{3}\mathrm{M_{\odot}yr^{-1}}$
 
@@ -26,7 +24,7 @@ import os
 
 ```python
 
-emulator_path=['/research/astro/fir/HELP/XID_plus/docs/notebooks/examples/SED_emulator/CIGALE_emulator_20210420_log10sfr_uniformAGN_z.npz']
+emulator_path=['/Users/pdh21/Google_Drive/WORK/XID_plus/docs/notebooks/examples/SED_emulator/CIGALE_emulator_20210420_log10sfr_uniformAGN_z.npz']
 field=['Lockman-SWIRE']
 ```
 
@@ -54,45 +52,6 @@ except:
 esb=Table.read('../../../data/MRR2018_tables/{}_sources.csv'.format(field[0]),format='ascii',encoding='utf-8')
 
 ```
-
-
-```python
-esb['S\xa0250 (mJy)']
-```
-
-
-
-
-&lt;MaskedColumn name=&apos;S\xa0250 (mJy)&apos; dtype=&apos;float64&apos; length=27&gt;
-<table>
-<tr><td>131.6</td></tr>
-<tr><td>95.7</td></tr>
-<tr><td>--</td></tr>
-<tr><td>44.2</td></tr>
-<tr><td>56.9</td></tr>
-<tr><td>116.5</td></tr>
-<tr><td>65.7</td></tr>
-<tr><td>--</td></tr>
-<tr><td>81.9</td></tr>
-<tr><td>--</td></tr>
-<tr><td>66.4</td></tr>
-<tr><td>43.5</td></tr>
-<tr><td>...</td></tr>
-<tr><td>76.1</td></tr>
-<tr><td>56.6</td></tr>
-<tr><td>--</td></tr>
-<tr><td>25.5</td></tr>
-<tr><td>183.8</td></tr>
-<tr><td>75.0</td></tr>
-<tr><td>--</td></tr>
-<tr><td>35.3</td></tr>
-<tr><td>43.1</td></tr>
-<tr><td>43.5</td></tr>
-<tr><td>--</td></tr>
-<tr><td>--</td></tr>
-</table>
-
-
 
 
 ```python
@@ -171,13 +130,11 @@ prior_predictive=Predictive(SED_prior.spire_model_CIGALE,posterior_samples = {},
 prior_pred=prior_predictive(random.PRNGKey(0),priors_prior_pred,phys_prior,hier_params)
 ```
 
-    CPU times: user 7.21 s, sys: 92.6 ms, total: 7.3 s
-    Wall time: 7.25 s
+    CPU times: user 8.01 s, sys: 122 ms, total: 8.13 s
+    Wall time: 8.06 s
 
 
 ## Fit Real data
-
-<span id="papermill-error-cell" style="color:red; font-family:Helvetica Neue, Helvetica, Arial, sans-serif; font-size:2em;">Execution using papermill encountered an exception here and stopped:</span>
 
 
 ```python
@@ -191,133 +148,13 @@ from operator import attrgetter
 nuts_kernel = NUTS(SED_prior.spire_model_CIGALE,init_strategy=numpyro.infer.init_to_feasible())
 mcmc = MCMC(nuts_kernel, num_samples=500, num_warmup=500,num_chains=4,chain_method='parallel')
 rng_key = random.PRNGKey(0)
-mcmc.run(rng_key,priors,phys_prior,hier_params)
+mcmc.run(rng_key,priors,phys_prior,hier_params,extra_fields=["num_steps", "energy"])
 ```
 
-
-    ---------------------------------------------------------------------------
-
-    ValueError                                Traceback (most recent call last)
-
-    <ipython-input-15-6b05d9a177a0> in <module>
-          9 mcmc = MCMC(nuts_kernel, num_samples=500, num_warmup=500,num_chains=4,chain_method='parallel')
-         10 rng_key = random.PRNGKey(0)
-    ---> 11 mcmc.run(rng_key,priors,phys_prior,hier_params)
-    
-
-    /research/astro/fir/HELP/help_python/miniconda3/envs/herschelhelp/lib/python3.8/site-packages/numpyro/infer/mcmc.py in run(self, rng_key, extra_fields, init_params, *args, **kwargs)
-        500         else:
-        501             if self.chain_method == 'sequential':
-    --> 502                 states, last_state = _laxmap(partial_map_fn, map_args)
-        503             elif self.chain_method == 'parallel':
-        504                 states, last_state = pmap(partial_map_fn)(map_args)
-
-
-    /research/astro/fir/HELP/help_python/miniconda3/envs/herschelhelp/lib/python3.8/site-packages/numpyro/infer/mcmc.py in _laxmap(f, xs)
-        157     for i in range(n):
-        158         x = jit(_get_value_from_index)(xs, i)
-    --> 159         ys.append(f(x))
-        160 
-        161     return tree_multimap(lambda *args: jnp.stack(args), *ys)
-
-
-    /research/astro/fir/HELP/help_python/miniconda3/envs/herschelhelp/lib/python3.8/site-packages/numpyro/infer/mcmc.py in _single_chain_mcmc(self, init, args, kwargs, collect_fields)
-        331         rng_key, init_state, init_params = init
-        332         if init_state is None:
-    --> 333             init_state = self.sampler.init(rng_key, self.num_warmup, init_params,
-        334                                            model_args=args, model_kwargs=kwargs)
-        335         sample_fn, postprocess_fn = self._get_cached_fns()
-
-
-    /research/astro/fir/HELP/help_python/miniconda3/envs/herschelhelp/lib/python3.8/site-packages/numpyro/infer/hmc.py in init(self, rng_key, num_warmup, init_params, model_args, model_kwargs)
-        481         else:
-        482             rng_key, rng_key_init_model = jnp.swapaxes(vmap(random.split)(rng_key), 0, 1)
-    --> 483         init_params = self._init_state(rng_key_init_model, model_args, model_kwargs, init_params)
-        484         if self._potential_fn and init_params is None:
-        485             raise ValueError('Valid value of `init_params` must be provided with'
-
-
-    /research/astro/fir/HELP/help_python/miniconda3/envs/herschelhelp/lib/python3.8/site-packages/numpyro/infer/hmc.py in _init_state(self, rng_key, model_args, model_kwargs, init_params)
-        436     def _init_state(self, rng_key, model_args, model_kwargs, init_params):
-        437         if self._model is not None:
-    --> 438             init_params, potential_fn, postprocess_fn, model_trace = initialize_model(
-        439                 rng_key,
-        440                 self._model,
-
-
-    /research/astro/fir/HELP/help_python/miniconda3/envs/herschelhelp/lib/python3.8/site-packages/numpyro/infer/util.py in initialize_model(rng_key, model, init_strategy, dynamic_args, model_args, model_kwargs, forward_mode_differentiation)
-        472             with numpyro.validation_enabled(), trace() as tr:
-        473                 # validate parameters
-    --> 474                 substituted_model(*model_args, **model_kwargs)
-        475                 # validate values
-        476                 for site in tr.values():
-
-
-    /research/astro/fir/HELP/help_python/miniconda3/envs/herschelhelp/lib/python3.8/site-packages/numpyro/primitives.py in __call__(self, *args, **kwargs)
-         78     def __call__(self, *args, **kwargs):
-         79         with self:
-    ---> 80             return self.fn(*args, **kwargs)
-         81 
-         82 
-
-
-    /research/astro/fir/HELP/help_python/miniconda3/envs/herschelhelp/lib/python3.8/site-packages/numpyro/primitives.py in __call__(self, *args, **kwargs)
-         78     def __call__(self, *args, **kwargs):
-         79         with self:
-    ---> 80             return self.fn(*args, **kwargs)
-         81 
-         82 
-
-
-    /research/astro/fir/HELP/XID_plus/xidplus/numpyro_fit/SED_prior.py in spire_model_CIGALE(priors, sed_prior, params)
-        111         # use truncated normal for redshift, with mean and sigma from prior
-        112         redshift = numpyro.sample('redshift',
-    --> 113                                   dist.TruncatedNormal(0.01, sed_prior.params_mu[:, 1], sed_prior.params_sig[:, 1]))
-        114         # use beta distribution for AGN as a fraction
-        115         agn = numpyro.sample('agn', dist.Beta(1.0, 3.0))
-
-
-    /research/astro/fir/HELP/help_python/miniconda3/envs/herschelhelp/lib/python3.8/site-packages/numpyro/distributions/distribution.py in __call__(cls, *args, **kwargs)
-         86             if result is not None:
-         87                 return result
-    ---> 88         return super().__call__(*args, **kwargs)
-         89 
-         90     @property
-
-
-    /research/astro/fir/HELP/help_python/miniconda3/envs/herschelhelp/lib/python3.8/site-packages/numpyro/distributions/continuous.py in __init__(self, low, loc, scale, validate_args)
-       1395     def __init__(self, low=0., loc=0., scale=1., validate_args=None):
-       1396         self.low, self.loc, self.scale = promote_shapes(low, loc, scale)
-    -> 1397         super().__init__(Normal(self.loc, self.scale), low=self.low, validate_args=validate_args)
-       1398 
-       1399     @property
-
-
-    /research/astro/fir/HELP/help_python/miniconda3/envs/herschelhelp/lib/python3.8/site-packages/numpyro/distributions/distribution.py in __call__(cls, *args, **kwargs)
-         86             if result is not None:
-         87                 return result
-    ---> 88         return super().__call__(*args, **kwargs)
-         89 
-         90     @property
-
-
-    /research/astro/fir/HELP/help_python/miniconda3/envs/herschelhelp/lib/python3.8/site-packages/numpyro/distributions/continuous.py in __init__(self, loc, scale, validate_args)
-       1019         self.loc, self.scale = promote_shapes(loc, scale)
-       1020         batch_shape = lax.broadcast_shapes(jnp.shape(loc), jnp.shape(scale))
-    -> 1021         super(Normal, self).__init__(batch_shape=batch_shape, validate_args=validate_args)
-       1022 
-       1023     def sample(self, key, sample_shape=()):
-
-
-    /research/astro/fir/HELP/help_python/miniconda3/envs/herschelhelp/lib/python3.8/site-packages/numpyro/distributions/distribution.py in __init__(self, batch_shape, event_shape, validate_args)
-        163                 if not_jax_tracer(is_valid):
-        164                     if not np.all(is_valid):
-    --> 165                         raise ValueError("{} distribution got invalid {} parameter.".format(
-        166                             self.__class__.__name__, param))
-        167         super(Distribution, self).__init__()
-
-
-    ValueError: Normal distribution got invalid loc parameter.
+    sample: 100%|██████████| 1000/1000 [19:43<00:00,  1.18s/it, 511 steps of size 6.26e-03. acc. prob=0.91]
+    sample: 100%|██████████| 1000/1000 [15:30<00:00,  1.08it/s, 511 steps of size 8.76e-03. acc. prob=0.85]
+    sample: 100%|██████████| 1000/1000 [16:32<00:00,  1.01it/s, 511 steps of size 9.66e-03. acc. prob=0.85]
+    sample: 100%|██████████| 1000/1000 [15:30<00:00,  1.07it/s, 511 steps of size 8.79e-03. acc. prob=0.87]
 
 
 
@@ -365,6 +202,12 @@ for i,k in enumerate(samples):
 plt.subplots_adjust(hspace=0.5,wspace=0.5)
 ```
 
+
+    
+![png](fit_8_files/fit_8_19_0.png)
+    
+
+
 All diagnostics look fine. 
 
 ## Posterior Probability distributions
@@ -392,6 +235,19 @@ g.data=df_prior
 g.map_upper(sns.kdeplot,alpha=0.5,color='Red',n_levels=5, shade=False,linewidth=3.0,shade_lowest=False)
 ```
 
+
+
+
+    <seaborn.axisgrid.PairGrid at 0x2aaba60331c0>
+
+
+
+
+    
+![png](fit_8_files/fit_8_23_1.png)
+    
+
+
 #### Source parameters 
 
 
@@ -409,6 +265,19 @@ axes[1].set_ylabel('AGN frac')
 axes[2].set_ylabel('Redshift')
 ```
 
+
+
+
+    Text(0, 0.5, 'Redshift')
+
+
+
+
+    
+![png](fit_8_files/fit_8_25_1.png)
+    
+
+
 ### Posterior Predicitive Checks
 
 
@@ -419,6 +288,10 @@ prior_predictive_samp=Predictive(SED_prior.spire_model_CIGALE,posterior_samples 
 prior_pred_samp=prior_predictive_samp(random.PRNGKey(0),priors_prior_pred,phys_prior,hier_params)
 mod_map_array_samp=[prior_pred_samp['obs_psw'].T,prior_pred_samp['obs_pmw'].T,prior_pred_samp['obs_plw'].T]
 ```
+
+    CPU times: user 2.38 s, sys: 14.5 ms, total: 2.4 s
+    Wall time: 2.36 s
+
 
 
 ```python
@@ -457,6 +330,33 @@ for i in range(0, len(priors)):
     figs[i].show_colorscale(vmin=-6, vmax=6, cmap=cmap)
     figs[i].add_colorbar()
     figs[i].colorbar.set_location('top')
+```
+
+## Save the samples using arviz
+
+
+```python
+import arviz as az
+```
+
+
+```python
+numpyro_data = az.from_numpyro(
+    mcmc,
+    prior=prior_pred,
+    posterior_predictive=prior_pred_samp,
+    coords={"src": np.arange(0,priors[0].nsrc),
+           "band":np.arange(0,3)},
+    dims={"agn": ["src"],
+         "bkg":["band"],
+         "redshift":["src"],
+          "sfr":["src"]},
+)
+```
+
+
+```python
+numpyro_data.to_netcdf('./output/{}/prior_'.format(field[0])+esb['field'][source[0]]+'_'+str(source[0])+'.nc')
 ```
 
 Read in the source we are interested in from Rowan-Robinsons's catalogue.
