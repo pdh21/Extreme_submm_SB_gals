@@ -1,0 +1,50 @@
+Optical templates used in Rowan-Robinson et al (2008) are given in files
+
+http://astro.imperial.ac.uk/public/mrr/swirephotzcat/templates/newE.dat
+http://astro.imperial.ac.uk/public/mrr/swirephotzcat/templates/newSab.dat
+http://astro.imperial.ac.uk/public/mrr/swirephotzcat/templates/newSbc.dat
+http://astro.imperial.ac.uk/public/mrr/swirephotzcat/templates/newScd.dat
+http://astro.imperial.ac.uk/public/mrr/swirephotzcat/templates/newSdm.dat
+http://astro.imperial.ac.uk/public/mrr/swirephotzcat/templates/newsb.dat
+http://astro.imperial.ac.uk/public/mrr/swirephotzcat/templates/newyoungE.dat
+http://astro.imperial.ac.uk/public/mrr/swirephotzcat/templates/newagn4.dat
+http://astro.imperial.ac.uk/public/mrr/swirephotzcat/templates/newagn5.dat
+http://astro.imperial.ac.uk/public/mrr/swirephotzcat/templates/newagn6.dat
+
+with pairs of numbers in Angstrom and arbitrary f_lambda units.
+
+Individual infrared templates are given in 
+
+http://astro.imperial.ac.uk/public/mrr/swirephotzcat/templates/cirrus.dat
+http://astro.imperial.ac.uk/public/mrr/swirephotzcat/templates/M82.dat
+http://astro.imperial.ac.uk/public/mrr/swirephotzcat/templates/A220.dat
+ 
+as pairs of numbers log10 lambda(mu), log vu S(nu),
+
+and in 
+http://astro.imperial.ac.uk/public/mrr/swirephotzcat/templates/dusttor.dat
+
+as pairs of numbers log10 lambda(mu), vu S(nu) [first two columns only].
+
+Infrared templates, smoothed with a 0.1 dex boxcar filter,are collected in 
+
+http://astro.imperial.ac.uk/public/mrr/swirephotzcat/templates/irtemplates2
+
+There are 4 blocks of 147 numbers, 
+first is log10(wavelngth in microns), second is log10 (nu S(nu)) for cirrus, third is for M82, 
+fourth is A220 template.
+Fifth block of numbers is log10( nu S(nu)) for AGN dust torus template at wavelengths given by
+log10(lambda(microns)) = 3.1 (-0.1) -1.4
+
+Cool cirrus templates used in Rowan-Robinson et al (2010) are 
+
+http://astro.imperial.ac.uk/public/mrr/swirephotzcat/templates/cirrus1.dat (psi=1) and 
+http://astro.imperial.ac.uk/public/mrr/swirephotzcat/templates/cirrus01.dat  (psi = 0.1).  
+
+Young starburst in same paper is 
+
+http://astro.imperial.ac.uk/public/mrr/swirephotzcat/templates/youngsb.150.0.dat 
+
+(Av=150, t=0).
+
+10/5/10
