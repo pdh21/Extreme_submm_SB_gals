@@ -335,26 +335,29 @@ def process_prior(new_Table=None,
     return [prior250,prior350,prior500],prior_list
 
 
-def getSEDs(data, src, nsamp=30):
+def getSEDs(data, src, nsamp=30,category='posterior'):
     import subprocess
+    if category=='posterior':
+        d=data.posterior
+    else:
+        d=data.prior
 
-    nsamp = 30
-    subsample = np.random.randint(low=0, high=data.posterior.chain.size * data.posterior.draw.size, size=nsamp)
+    subsample = np.random.choice(d.chain.size * d.draw.size, size=nsamp,replace=False)
 
-    agn = data.posterior.agn.values.reshape(data.posterior.chain.size * data.posterior.draw.size,
-                                            data.posterior.src.size)[subsample, :]
-    z = data.posterior.redshift.values.reshape(data.posterior.chain.size * data.posterior.draw.size,
-                                               data.posterior.src.size)[subsample, :]
-    sfr = data.posterior.sfr.values.reshape(data.posterior.chain.size * data.posterior.draw.size,
-                                            data.posterior.src.size)[subsample, :]
+    agn = d.agn.values.reshape(d.chain.size * d.draw.size,
+                                            d.src.size)[subsample, :]
+    z = d.redshift.values.reshape(d.chain.size * d.draw.size,
+                                               d.src.size)[subsample, :]
+    sfr = d.sfr.values.reshape(d.chain.size * d.draw.size,
+                                            d.src.size)[subsample, :]
 
     fin = open("/Volumes/pdh_storage/cigale/pcigale_orig.ini")
     fout = open("/Volumes/pdh_storage/cigale/pcigale.ini", "wt")
     for line in fin:
         if 'redshift =' in line:
-            fout.write('    redshift = ' + ', '.join(['{:.7f}'.format(i) for i in z[:, src]]) + ' \n')
+            fout.write('    redshift = ' + ', '.join(['{:.13f}'.format(i) for i in z[:, src]]) + ' \n')
         elif 'fracAGN =' in line:
-            fout.write('    fracAGN = ' + ', '.join(['{:.10f}'.format(i) for i in agn[:, src]]) + ' \n')
+            fout.write('    fracAGN = ' + ', '.join(['{:.13f}'.format(i) for i in agn[:, src]]) + ' \n')
         else:
             fout.write(line)
     fin.close()

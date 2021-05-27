@@ -1,4 +1,3 @@
 emulator_path:
-  - '/research/astro/fir/HELP/XID_plus/docs/notebooks/examples/SED_emulator/CIGALE_emulator_20210420_log10sfr_uniformAGN_z.npz'
-field:
-  - 'Lockman-SWIRE'
+  - '/Users/pdh21/Google_Drive/WORK/XID_plus/docs/notebooks/examples/SED_emulator/CIGALE_emulator_20210420_log10sfr_uniformAGN_z.npz'
+model=
