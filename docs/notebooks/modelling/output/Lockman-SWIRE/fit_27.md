@@ -30,16 +30,6 @@ field=['Lockman-SWIRE']
 
 
 ```python
-# Parameters
-emulator_path = [
-    "/research/astro/fir/HELP/XID_plus/docs/notebooks/examples/SED_emulator/CIGALE_emulator_20210420_log10sfr_uniformAGN_z.npz"
-]
-field = ["Lockman-SWIRE"]
-
-```
-
-
-```python
 try:
     source = [np.int(os.environ['SGE_TASK_ID'])-1]
 except:
@@ -62,25 +52,6 @@ priors,_=xidplus.load('./output/{}/prior_'.format(field[0])+esb['field'][source[
 ```python
 prior_list=Table.read('./output/{}/prior_list_'.format(field[0])+esb['field'][source[0]]+'_'+str(source[0])+'.ascii',format='ascii')
 
-```
-
-
-```python
-z_mu=np.empty((priors[1].nsrc))
-z_sig=np.empty((priors[1].nsrc))
-
-for x,i in enumerate(priors[1].ID):
-    ind=prior_list['help_id']==str(i)
-    z_mu[x]=prior_list['redshift'][ind]
-    z_sig[x]=prior_list['redshift_unc'][ind]
-
-    
-
-sfr_mu=1.5*z_mu+1.0
-sfr_sig=np.full(priors[1].nsrc,0.5)
-
-agn_frac_mu=np.full(priors[1].nsrc,-1)
-agn_frac_sig=np.full(priors[1].nsrc,1)
 ```
 
 
@@ -154,7 +125,7 @@ mcmc.run(rng_key,priors,phys_prior,hier_params,extra_fields=["num_steps", "energ
     sample: 100%|██████████| 1000/1000 [05:33<00:00,  3.00it/s, 255 steps of size 1.54e-02. acc. prob=0.89]
     sample: 100%|██████████| 1000/1000 [05:24<00:00,  3.08it/s, 255 steps of size 1.75e-02. acc. prob=0.87]
     sample: 100%|██████████| 1000/1000 [05:47<00:00,  2.88it/s, 255 steps of size 1.91e-02. acc. prob=0.88]
-    sample: 100%|██████████| 1000/1000 [06:08<00:00,  2.71it/s, 255 steps of size 1.42e-02. acc. prob=0.91]
+    sample: 100%|██████████| 1000/1000 [06:08<00:00,  2.71it/s, 255 steps of size 1.42e-02. acc. prob=0.91] 
 
 
 
@@ -204,7 +175,7 @@ plt.subplots_adjust(hspace=0.5,wspace=0.5)
 
 
     
-![png](fit_27_files/fit_27_19_0.png)
+![png](fit_27_files/fit_27_17_0.png)
     
 
 
@@ -244,7 +215,7 @@ g.map_upper(sns.kdeplot,alpha=0.5,color='Red',n_levels=5, shade=False,linewidth=
 
 
     
-![png](fit_27_files/fit_27_23_1.png)
+![png](fit_27_files/fit_27_21_1.png)
     
 
 
@@ -274,7 +245,7 @@ axes[2].set_ylabel('Redshift')
 
 
     
-![png](fit_27_files/fit_27_25_1.png)
+![png](fit_27_files/fit_27_23_1.png)
     
 
 
@@ -316,7 +287,7 @@ figures,fig=xidplus.plot_map(priors)
 
 
     
-![png](fit_27_files/fit_27_29_0.png)
+![png](fit_27_files/fit_27_27_0.png)
     
 
 
@@ -350,7 +321,7 @@ for i in range(0, len(priors)):
 
 
     
-![png](fit_27_files/fit_27_30_0.png)
+![png](fit_27_files/fit_27_28_0.png)
     
 
 
@@ -500,7 +471,7 @@ for i in range(0,3):
 
 
     
-![png](fit_27_files/fit_27_43_0.png)
+![png](fit_27_files/fit_27_41_0.png)
     
 
 
@@ -603,7 +574,7 @@ for i in range(0,len(priors)):
 
 
     
-![png](fit_27_files/fit_27_47_0.png)
+![png](fit_27_files/fit_27_45_0.png)
     
 
 
@@ -650,7 +621,7 @@ g.axes[-1,-1].axvline(x=esb[source[0]]['Z\xa0comb'],color='black')
 
 
     
-![png](fit_27_files/fit_27_49_1.png)
+![png](fit_27_files/fit_27_47_1.png)
     
 
 

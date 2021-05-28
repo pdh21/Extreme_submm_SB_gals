@@ -154,7 +154,7 @@ mcmc.run(rng_key,priors,phys_prior,hier_params,extra_fields=["num_steps", "energ
     sample: 100%|██████████| 1000/1000 [04:30<00:00,  3.69it/s, 255 steps of size 2.07e-02. acc. prob=0.84]
     sample: 100%|██████████| 1000/1000 [04:19<00:00,  3.85it/s, 255 steps of size 2.12e-02. acc. prob=0.86]
     sample: 100%|██████████| 1000/1000 [04:16<00:00,  3.91it/s, 255 steps of size 1.92e-02. acc. prob=0.87]
-    sample: 100%|██████████| 1000/1000 [04:22<00:00,  3.81it/s, 255 steps of size 1.61e-02. acc. prob=0.87]
+    sample: 100%|██████████| 1000/1000 [04:22<00:00,  3.81it/s, 255 steps of size 1.61e-02. acc. prob=0.87] 
 
 
 
