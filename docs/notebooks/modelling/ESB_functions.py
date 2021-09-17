@@ -335,8 +335,9 @@ def process_prior(new_Table=None,
     return [prior250,prior350,prior500],prior_list
 
 
-def getSEDs(data, src, nsamp=30,category='posterior'):
+def getSEDs(data, src, nsamp=30,category='posterior',filename='tmp'):
     import subprocess
+    import os
     if category=='posterior':
         d=data.posterior
     else:
@@ -362,11 +363,16 @@ def getSEDs(data, src, nsamp=30,category='posterior'):
             fout.write(line)
     fin.close()
     fout.close()
+    from shutil import copyfile, move, rmtree
+    copyfile("/Volumes/pdh_storage/cigale/pcigale_orig.ini.spec","/Volumes/pdh_storage/cigale/pcigale.ini.spec")
+
+
 
     p = subprocess.Popen(['pcigale', 'run'], cwd='/Volumes/pdh_storage/cigale/')
     p.wait()
-
-    SEDs = Table.read('/Volumes/pdh_storage/cigale/out//models-block-0.fits')
+    rmtree('/Volumes/pdh_storage/cigale/{}/'.format(filename))
+    move('/Volumes/pdh_storage/cigale/out/', '/Volumes/pdh_storage/cigale/{}/'.format(filename))
+    SEDs = Table.read('/Volumes/pdh_storage/cigale/{}//models-block-0.fits'.format(filename))
     # set more appropriate units for dust
     from astropy.constants import L_sun, M_sun
     SEDs['dust.luminosity'] = SEDs['dust.luminosity'] / L_sun.value
@@ -375,7 +381,7 @@ def getSEDs(data, src, nsamp=30,category='posterior'):
     wavelengths = []
     fluxes = []
     for i in range(0, nsamp):
-        sed_plot = Table.read('/Volumes/pdh_storage/cigale/out/{}_best_model.fits'.format(+SEDs[i * nsamp + (i)]['id']))
+        sed_plot = Table.read('/Volumes/pdh_storage/cigale/{}/{}_best_model.fits'.format(filename,+SEDs[i * nsamp + (i)]['id']))
         wavelengths.append(sed_plot['wavelength'] / 1E3)
         fluxes.append(((10.0 ** sfr[i, src]) / SEDs[i * nsamp + (i)]['sfh.sfr']) * sed_plot['Fnu'])
     from astropy.table import vstack, hstack
